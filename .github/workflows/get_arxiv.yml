@@ -20,7 +20,7 @@ jobs:
                     
       - name: run
         run: |
-          python -c 'import arxiv, datetime; papers = arxiv.query("cat:astro-ph", max_results=100); import json; fn = datetime.datetime.now().replace(" ","_"); fh = open(f"data/{fn}.json"); json.dump(papers, fh); fh.close()"
+          python -c 'import arxiv, datetime; papers = arxiv.query("cat:astro-ph", max_results=100); import json; fn = datetime.datetime.now().replace(" ","_"); fh = open(f"data/{fn}.json"); json.dump(papers, fh); fh.close()'
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
