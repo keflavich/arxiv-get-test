@@ -25,13 +25,13 @@ jobs:
           
       - name: run
         run: |
-          python -c 'import arxiv; papers = arxiv.query("cat:astro-ph", max_results=100); import json; fh = open("blah.json"); json.dump(papers, fh); fh.close()"
+          python -c 'import arxiv, datetime; papers = arxiv.query("cat:astro-ph", max_results=100); import json; fn = datetime.datetime.now().replace(" ","_"); fh = open(f"data/{fn}.json"); json.dump(papers, fh); fh.close()"
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
           BASE_BRANCH: master
           BRANCH: gh-pages
-          FOLDER: build
+          FOLDER: data
           CLEAN: true
           SSH: true # SSH must be set to true so the deploy action knows which protocol to deploy with.
