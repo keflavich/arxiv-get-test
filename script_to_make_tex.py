@@ -1,16 +1,27 @@
 import arxiv
 import re
 
+tex_template = r"""
+
+\href{{{id}}}{{\textcolor{{myred}}{{\large\bf{{{title}}}}}}}
+
+{{\bf{{ \small \textcolor{{Grey}}{{{authors_joined}}}}}}}
+
+{summary}
+
+\url{{{id}}}
+
+"""
+
 def make_tex_file(arxiv_id_list, tex_filename='test.tex'):
     arxiv_meta = arxiv.query(id_list=arxiv_id_list)
 
     with open('test_example.tex', 'w') as fh:
         for row in arxiv_meta:
-            # all the formatting happens here
-            fh.write(row['title'] + "\\\\ \n")
-            fh.write("\\url{" + row['id'] + "}\\\\ \n")
-            fh.write(", ".join(row['authors']) + "\\\\ \n")
-            fh.write(row['summary'] + '\n\\\\ \n\n')
+            row['authors_joined'] = ", ".join(row['authors'])
+
+            fh.write(tex_template.format(**row))
+
             fh.write("% ----------------------------------- \n\n\n")
 
 
