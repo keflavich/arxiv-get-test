@@ -16,8 +16,8 @@ tex_template = r"""
 def make_tex_file(arxiv_id_list, tex_filename='test.tex'):
     arxiv_meta = arxiv.query(id_list=arxiv_id_list)
 
-    with open('test_example.tex', 'w') as fh:
-        for row in sorted(arxiv_meta, key=lambda x: x['authors_joined'][0]):
+    with open(tex_filename, 'w') as fh:
+        for row in sorted(arxiv_meta, key=lambda x: x['authors'][0]):
             row['authors_joined'] = ", ".join(row['authors'])
 
             fh.write(tex_template.format(**row))
