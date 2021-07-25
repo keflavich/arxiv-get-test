@@ -1,3 +1,9 @@
+"""
+script_to_make_tex:
+
+2021 July 25: updated to work with arxiv==1.4.0
+"""
+
 import arxiv
 import re
 
@@ -14,13 +20,22 @@ tex_template = r"""
 """
 
 def make_tex_file(arxiv_id_list, tex_filename='test.tex'):
-    arxiv_meta = arxiv.query(id_list=arxiv_id_list)
+    arxiv_meta = arxiv.Search(id_list=arxiv_id_list)
+    firstauthors = [row.authors[0].name for row in arxiv_meta.results()]
 
     with open('test_example.tex', 'w') as fh:
-        for row in sorted(arxiv_meta, key=lambda x: x['authors_joined'][0]):
-            row['authors_joined'] = ", ".join(row['authors'])
+        rowdata = {}
+        # x[0]: firstauthors
+        # split()[-1]: last name
+        # [0]: first letter
+        for _,row in sorted(zip(firstauthors, arxiv_meta.results()), key=lambda x: x[0].split()[-1][0]):
 
-            fh.write(tex_template.format(**row))
+            rowdata['authors_joined'] = ", ".join([auth.name for auth in row.authors])
+            rowdata['title'] = row.title
+            rowdata['id'] = row.get_short_id()
+            rowdata['summary'] = row.summary
+
+            fh.write(tex_template.format(**rowdata))
 
             fh.write("% ----------------------------------- \n\n\n")
 
