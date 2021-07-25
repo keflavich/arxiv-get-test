@@ -15,7 +15,6 @@ tex_template = r"""
 
 {summary}
 
-\url{{{id}}}
 
 """
 
@@ -32,7 +31,7 @@ def make_tex_file(arxiv_id_list, tex_filename='test.tex'):
 
             rowdata['authors_joined'] = ", ".join([auth.name for auth in row.authors])
             rowdata['title'] = row.title
-            rowdata['id'] = row.get_short_id()
+            rowdata['id'] = row.entry_id
             rowdata['summary'] = row.summary
 
             fh.write(tex_template.format(**rowdata))
