@@ -18,17 +18,18 @@ tex_template = r"""
 
 """
 
-def make_tex_file(arxiv_id_list, tex_filename='test.tex'):
+def make_tex_file(arxiv_id_list, tex_filename='arxiv.tex'):
     arxiv_meta = arxiv.Search(id_list=arxiv_id_list)
     firstauthors = [row.authors[0].name for row in arxiv_meta.results()]
 
-    with open('test_example.tex', 'w') as fh:
+    with open(tex_filename, 'w') as fh:
         rowdata = {}
         # x[0]: firstauthors
         # split()[-1]: last name
         # [0]: first letter
         for _,row in sorted(zip(firstauthors, arxiv_meta.results()), key=lambda x: x[0].split()[-1][0]):
 
+            print(f"Finished {row.entry_id}")
             rowdata['authors_joined'] = ", ".join([auth.name for auth in row.authors])
             rowdata['title'] = row.title
             rowdata['id'] = row.entry_id
@@ -41,11 +42,11 @@ def make_tex_file(arxiv_id_list, tex_filename='test.tex'):
 
 def get_arxiv_ids(arxiv_idlist_filename='arxiv.id'):
 
-    with open('arxiv.id', 'r') as fh:
+    with open(arxiv_idlist_filename, 'r') as fh:
         arxiv_ids = [re.compile("([0-9]{4}\.[0-9]{5})").search(row).groups()[0] for row in fh.readlines()]
 
     return arxiv_ids
 
 if __name__ == "__main__":
-    arxiv_ids = get_arxiv_ids()
-    make_tex_file(arxiv_ids)
+    arxiv_ids = get_arxiv_ids('arxiv.id')
+    make_tex_file(arxiv_ids, tex_filename='arxiv.tex')
